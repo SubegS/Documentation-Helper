@@ -5,6 +5,8 @@ from typing import Any, Dict, List
 import certifi
 from dotenv import load_dotenv
 from langchain_openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from langchain_tavily import TavilyCrawl, TavilyExtract, TavilyMap
 
 load_dotenv()
 
@@ -20,7 +22,12 @@ embeddings = OpenAIEmbeddings(
     chunk_size=50,
     retry_min_seconds=10,
 )
-
+vectorstore = PineconeVectorStore(
+     index_name="langchain-doc-index", embedding=embeddings
+)
+tavily_extract = TavilyExtract()
+tavily_map = TavilyMap(max_depth=5, max_breadth=20, max_pages=1000)
+tavily_crawl = TavilyCrawl()
 
 async def main():
     """Main async function to orchestrate the entire process."""
